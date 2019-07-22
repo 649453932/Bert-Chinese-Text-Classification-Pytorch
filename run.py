@@ -8,9 +8,7 @@ import argparse
 from utils import build_dataset, build_iterator, get_time_dif
 
 parser = argparse.ArgumentParser(description='Chinese Text Classification')
-parser.add_argument('--model', type=str, required=True, help='choose a model: TextCNN, TextRNN, FastText, TextRCNN, TextRNN_Att, DPCNN')
-# parser.add_argument('--embedding', default='pre_trained', type=str, help='random or pre_trained')
-parser.add_argument('--word', default=False, type=bool, help='True for word, False for char')
+parser.add_argument('--model', type=str, required=True, help='choose a model: Bert, ERNIE')
 args = parser.parse_args()
 
 
@@ -27,7 +25,7 @@ if __name__ == '__main__':
 
     start_time = time.time()
     print("Loading data...")
-    train_data, dev_data, test_data = build_dataset(config, args.word)
+    train_data, dev_data, test_data = build_dataset(config)
     train_iter = build_iterator(train_data, config)
     dev_iter = build_iterator(dev_data, config)
     test_iter = build_iterator(test_data, config)
@@ -36,5 +34,4 @@ if __name__ == '__main__':
 
     # train
     model = x.Model(config).to(config.device)
-    # init_network(model)
     train(config, model, train_iter, dev_iter, test_iter)

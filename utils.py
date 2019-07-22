@@ -12,7 +12,7 @@ from pytorch_pretrained_bert import BertTokenizer
 PAD = '[PAD]'  # padding符号
 
 
-def build_dataset(config, ues_word):
+def build_dataset(config):
 
     def load_dataset(path, pad_size=32):
         contents = []
