@@ -38,7 +38,7 @@ tensorboardX
 模型|acc|备注
 --|--|--
 bert|94.04%|bert + fc  
-ERNIE|92.75%|效果略差  
+ERNIE|92.75%|说好的中文碾压bert呢  
 
 CNN、RNN、DPCNN、RCNN、RNN+Attention、FastText等模型效果，请见我另外一个[仓库](https://github.com/649453932/Chinese-Text-Classification-Pytorch)。  
 
