@@ -1,9 +1,8 @@
 # coding: UTF-8
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
-import numpy as np
-from pytorch_pretrained_bert import BertModel, BertTokenizer
+# from pytorch_pretrained_bert import BertModel, BertTokenizer
+from pytorch_pretrained import BertModel, BertTokenizer
 
 
 class Config(object):

@@ -1,13 +1,8 @@
 # coding: UTF-8
-import os
 import torch
-import numpy as np
-import pickle as pkl
 from tqdm import tqdm
 import time
 from datetime import timedelta
-from pytorch_pretrained_bert import BertTokenizer
-
 
 PAD = '[PAD]'  # padding符号
 

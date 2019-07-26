@@ -5,7 +5,7 @@
 
 ## 介绍
 模型介绍、数据流动过程：还没写完，写好之后再贴博客地址。  
-
+机器：一块2080Ti ， 训练时间：30分钟。  
 
 ## 环境
 python 3.7  
@@ -13,7 +13,8 @@ pytorch 1.1
 tqdm  
 sklearn  
 tensorboardX  
-[pytorch_pretrained_bert](https://github.com/huggingface/pytorch-transformers)  
+~~pytorch_pretrained_bert~~(预训练代码也上传了, 不需要这个库了)  
+
 
 ## 中文数据集
 我从[THUCNews](http://thuctc.thunlp.org/)中抽取了20万条新闻标题，已上传至github，文本长度在20到30之间。一共10个类别，每类2万条。数据以字为单位输入模型。
