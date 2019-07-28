@@ -4,7 +4,7 @@ from tqdm import tqdm
 import time
 from datetime import timedelta
 
-PAD = '[PAD]'  # padding符号
+PAD, CLS = '[PAD]', '[CLS]'  # padding符号, bert中综合信息符号
 
 
 def build_dataset(config):
@@ -18,6 +18,7 @@ def build_dataset(config):
                     continue
                 content, label = lin.split('\t')
                 token = config.tokenizer.tokenize(content)
+                token = [CLS] + token
                 seq_len = len(token)
                 mask = []
                 token_ids = config.tokenizer.convert_tokens_to_ids(token)
