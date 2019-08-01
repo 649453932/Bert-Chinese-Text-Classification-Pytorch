@@ -38,8 +38,14 @@ tensorboardX
 
 模型|acc|备注
 --|--|--
-bert|94.83%|bert + fc  
+bert|94.83%|单纯的bert
 ERNIE|94.61%|说好的中文碾压bert呢  
+bert|94.44%|bert + CNN  
+bert|94.57%|bert + RNN  
+bert|94.51%|bert + RCNN  
+bert|94.47%|bert + DPCNN  
+
+原始的bert效果就很好了，把bert当作embedding层送入其它模型，效果反而降了，之后会尝试长文本的效果对比。
 
 CNN、RNN、DPCNN、RCNN、RNN+Attention、FastText等模型效果，请见我另外一个[仓库](https://github.com/649453932/Chinese-Text-Classification-Pytorch)。  
 
