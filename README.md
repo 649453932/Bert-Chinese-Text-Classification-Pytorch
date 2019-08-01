@@ -50,7 +50,10 @@ bert模型放在 bert_pretain目录下，ERNIE模型放在ERNIE_pretrain目录�
  - vocab.txt  
 
 预训练模型下载地址：  
-bert_Chinese: https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-chinese.tar.gz  来自[这里](https://github.com/huggingface/pytorch-transformers)  
+bert_Chinese: 模型 https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-chinese.tar.gz  
+              词表 https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-chinese-vocab.txt  
+来自[这里](https://github.com/huggingface/pytorch-transformers) 
+  
 ERNIE_Chinese: http://image.nghuyong.top/ERNIE.zip  来自[这里](https://github.com/nghuyong/ERNIE-Pytorch)  
 解压后，按照上面说的放在对应目录下，文件名称确认无误即可。  
 
