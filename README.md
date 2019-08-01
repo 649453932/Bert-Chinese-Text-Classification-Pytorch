@@ -40,10 +40,10 @@ tensorboardX
 --|--|--
 bert|94.83%|单纯的bert
 ERNIE|94.61%|说好的中文碾压bert呢  
-bert|94.44%|bert + CNN  
-bert|94.57%|bert + RNN  
-bert|94.51%|bert + RCNN  
-bert|94.47%|bert + DPCNN  
+bert_CNN|94.44%|bert + CNN  
+bert_RNN|94.57%|bert + RNN  
+bert_RCNN|94.51%|bert + RCNN  
+bert_DPCNN|94.47%|bert + DPCNN  
 
 原始的bert效果就很好了，把bert当作embedding层送入其它模型，效果反而降了，之后会尝试长文本的效果对比。
 
@@ -69,6 +69,9 @@ ERNIE_Chinese: http://image.nghuyong.top/ERNIE.zip  来自[这里](https://githu
 # 训练并测试：
 # bert
 python run.py --model bert
+
+# bert + 其它
+python run.py --model bert_CNN
 
 # ERNIE
 python run.py --model ERNIE
