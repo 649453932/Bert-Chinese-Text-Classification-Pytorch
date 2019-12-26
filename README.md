@@ -38,8 +38,14 @@ tensorboardX
 
 模型|acc|备注
 --|--|--
-bert|94.83%|bert + fc  
+bert|94.83%|单纯的bert
 ERNIE|94.61%|说好的中文碾压bert呢  
+bert_CNN|94.44%|bert + CNN  
+bert_RNN|94.57%|bert + RNN  
+bert_RCNN|94.51%|bert + RCNN  
+bert_DPCNN|94.47%|bert + DPCNN  
+
+原始的bert效果就很好了，把bert当作embedding层送入其它模型，效果反而降了，之后会尝试长文本的效果对比。
 
 CNN、RNN、DPCNN、RCNN、RNN+Attention、FastText等模型效果，请见我另外一个[仓库](https://github.com/649453932/Chinese-Text-Classification-Pytorch)。  
 
@@ -52,9 +58,13 @@ bert模型放在 bert_pretain目录下，ERNIE模型放在ERNIE_pretrain目录�
 预训练模型下载地址：  
 bert_Chinese: 模型 https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-chinese.tar.gz  
               词表 https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-chinese-vocab.txt  
-来自[这里](https://github.com/huggingface/pytorch-transformers) 
-  
-ERNIE_Chinese: http://image.nghuyong.top/ERNIE.zip  来自[这里](https://github.com/nghuyong/ERNIE-Pytorch)  
+来自[这里](https://github.com/huggingface/pytorch-transformers)   
+备用：模型的网盘地址：https://pan.baidu.com/s/1qSAD5gwClq7xlgzl_4W3Pw
+
+ERNIE_Chinese: http://image.nghuyong.top/ERNIE.zip  
+来自[这里](https://github.com/nghuyong/ERNIE-Pytorch)  
+备用：网盘地址：https://pan.baidu.com/s/1lEPdDN1-YQJmKEd_g9rLgw  
+
 解压后，按照上面说的放在对应目录下，文件名称确认无误即可。  
 
 ## 使用说明
@@ -63,6 +73,9 @@ ERNIE_Chinese: http://image.nghuyong.top/ERNIE.zip  来自[这里](https://githu
 # 训练并测试：
 # bert
 python run.py --model bert
+
+# bert + 其它
+python run.py --model bert_CNN
 
 # ERNIE
 python run.py --model ERNIE
