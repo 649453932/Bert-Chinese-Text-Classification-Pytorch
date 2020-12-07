@@ -4,7 +4,7 @@
 中文文本分类，Bert，ERNIE，基于pytorch，开箱即用。
 
 ## 介绍
-模型介绍、数据流动过程：还没写完，写好之后再贴博客地址。  
+模型介绍、数据流动过程：~~还没写完，写好之后再贴博客地址。~~ 工作忙，懒得写了，类似文章有很多。
 机器：一块2080Ti ， 训练时间：30分钟。  
 
 ## 环境
@@ -85,10 +85,6 @@ python run.py --model ERNIE
 模型都在models目录下，超参定义和模型定义在同一文件中。  
 
 ## 未完待续
- - bert + CNN, RNN, RCNN, DPCNN等  
- - ERNIE + CNN, RNN, RCNN, DPCNN等  
- - XLNET  
- - 另外想加个label smoothing试试效果  
  - 封装预测功能
 
 
