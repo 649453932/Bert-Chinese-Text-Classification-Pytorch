@@ -6,7 +6,7 @@ import torch.nn.functional as F
 from sklearn import metrics
 import time
 from utils import get_time_dif
-from pytorch_pretrained_bert.optimization import BertAdam
+from pytorch_pretrained.optimization import BertAdam
 
 
 # 权重初始化，默认xavier
