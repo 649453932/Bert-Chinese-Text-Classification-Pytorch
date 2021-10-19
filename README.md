@@ -12,8 +12,11 @@
 python 3.7  
 pytorch 1.1  
 tqdm  
-sklearn  
-tensorboardX  
+sklearn
+boto3
+requests
+regex
+tensorboardX
 ~~pytorch_pretrained_bert~~(预训练代码也上传了, 不需要这个库了)  
 
 
