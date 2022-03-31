@@ -3,7 +3,9 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 # from pytorch_pretrained_bert import BertModel, BertTokenizer
-from pytorch_pretrained import BertModel, BertTokenizer
+# from pytorch_pretrained import BertModel, BertTokenizer
+from transformers import BertModel, BertTokenizer
+
 
 
 class Config(object):
@@ -50,7 +52,7 @@ class Model(nn.Module):
     def forward(self, x):
         context = x[0]  # 输入的句子
         mask = x[2]  # 对padding部分进行mask，和句子一个size，padding部分用0表示，如：[1, 1, 1, 1, 0, 0]
-        encoder_out, text_cls = self.bert(context, attention_mask=mask, output_all_encoded_layers=False)
+        encoder_out, text_cls = self.bert(context, attention_mask=mask, output_hidden_states=False)
         x = encoder_out.unsqueeze(1)  # [batch_size, 1, seq_len, embed]
         x = self.conv_region(x)  # [batch_size, 250, seq_len-3+1, 1]
 
