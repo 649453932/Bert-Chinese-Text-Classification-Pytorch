@@ -1,5 +1,6 @@
 import torch
 from importlib import import_module
+import time
 
 key = {
     0: 'finance',
@@ -57,4 +58,8 @@ def predict(text):
 
 if __name__ == '__main__':
     t = "李稻葵:过去2年抗疫为每人增寿10天"
+    t = "天问一号着陆火星一周年"
+    a = time.time()
     print(predict(t))
+    b = time.time()
+    print(b-a)

@@ -59,27 +59,30 @@ if __name__ == '__main__':
     t = "李稻葵:过去2年抗疫为每人增寿10天"
     data = build_predict_text(t)
     #print(predict(t))
+    '''
     input_names = ['input']
     torch.onnx.export(model, 
                       data,
                       'model.onnx',
                       export_params = True,
-                      opset_version=10,
+                      opset_version=11,
                       input_names = input_names,   # the model's input names
                       output_names = ['output'], # the model's output names
                       dynamic_axes={'input' : {0 : 'batch_size'},    # variable lenght axes
                                     'output' : {0 : 'batch_size'}})
     '''
-    input_names = ['input_ids', 'input_masks', 'token_type_ids']
+
+    #'''
+    input_names = ['ids', 'seq_len', 'mask']
     torch.onnx.export(model, 
                       data,
                       'model.onnx',
                       export_params = True,
-                      opset_version=10,
+                      opset_version=11,
                       input_names = input_names,   # the model's input names
                       output_names = ['output'], # the model's output names
-                      dynamic_axes={'input_ids' : {0 : 'batch_size'},    # variable lenght axes
-                                    'input_masks' : {0 : 'batch_size'},
-                                    'token_type_ids' : {0 : 'batch_size'},
+                      dynamic_axes={'ids' : {0 : 'batch_size'},    # variable lenght axes
+                                    'seq_len' : {0 : 'batch_size'},
+                                    'mask' : {0 : 'batch_size'},
                                     'output' : {0 : 'batch_size'}})
-    '''
+    #'''
