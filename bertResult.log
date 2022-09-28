@@ -1,0 +1,68 @@
+Loading data...
+180000it [00:25, 7065.20it/s]
+10000it [00:01, 7213.41it/s]
+10000it [00:01, 7287.59it/s]
+Time usage: 0:00:28
+Epoch [1/3]
+/home/rkong/demoCode/Bert-Chinese-Text-Classification-Pytorch/pytorch_pretrained/optimization.py:275: UserWarning: This overload of add_ is deprecated:
+        add_(Number alpha, Tensor other)
+Consider using one of the following signatures instead:
+        add_(Tensor other, *, Number alpha) (Triggered internally at  /opt/conda/conda-bld/pytorch_1607370141920/work/torch/csrc/utils/python_arg_parser.cpp:882.)
+  next_m.mul_(beta1).add_(1 - beta1, grad)
+Iter:      0,  Train Loss:   2.4,  Train Acc: 14.06%,  Val Loss:   2.4,  Val Acc:  9.08%,  Time: 0:00:36 *
+Iter:    100,  Train Loss:  0.46,  Train Acc: 85.94%,  Val Loss:  0.37,  Val Acc: 89.20%,  Time: 0:03:19 *
+Iter:    200,  Train Loss:  0.41,  Train Acc: 84.38%,  Val Loss:  0.32,  Val Acc: 90.26%,  Time: 0:06:02 *
+Iter:    300,  Train Loss:  0.31,  Train Acc: 92.19%,  Val Loss:   0.3,  Val Acc: 90.79%,  Time: 0:08:46 *
+Iter:    400,  Train Loss:  0.38,  Train Acc: 89.06%,  Val Loss:  0.29,  Val Acc: 91.37%,  Time: 0:11:29 *
+Iter:    500,  Train Loss:  0.17,  Train Acc: 94.53%,  Val Loss:  0.25,  Val Acc: 92.03%,  Time: 0:14:12 *
+Iter:    600,  Train Loss:  0.25,  Train Acc: 91.41%,  Val Loss:  0.25,  Val Acc: 92.26%,  Time: 0:16:55 *
+Iter:    700,  Train Loss:  0.18,  Train Acc: 94.53%,  Val Loss:  0.24,  Val Acc: 92.73%,  Time: 0:19:38 *
+Iter:    800,  Train Loss:  0.16,  Train Acc: 96.09%,  Val Loss:  0.23,  Val Acc: 92.66%,  Time: 0:22:22 *
+Iter:    900,  Train Loss:  0.19,  Train Acc: 95.31%,  Val Loss:  0.22,  Val Acc: 93.09%,  Time: 0:25:05 *
+Iter:   1000,  Train Loss:  0.14,  Train Acc: 93.75%,  Val Loss:  0.23,  Val Acc: 92.64%,  Time: 0:27:46
+Iter:   1100,  Train Loss:  0.21,  Train Acc: 94.53%,  Val Loss:  0.21,  Val Acc: 93.16%,  Time: 0:30:29 *
+Iter:   1200,  Train Loss:  0.19,  Train Acc: 91.41%,  Val Loss:   0.2,  Val Acc: 93.16%,  Time: 0:33:12 *
+Iter:   1300,  Train Loss:  0.21,  Train Acc: 90.62%,  Val Loss:   0.2,  Val Acc: 93.31%,  Time: 0:35:56 *
+Iter:   1400,  Train Loss:  0.34,  Train Acc: 90.62%,  Val Loss:  0.19,  Val Acc: 93.74%,  Time: 0:38:39 *
+Epoch [2/3]
+Iter:   1500,  Train Loss:  0.15,  Train Acc: 95.31%,  Val Loss:  0.19,  Val Acc: 93.85%,  Time: 0:41:22 *
+Iter:   1600,  Train Loss:  0.17,  Train Acc: 94.53%,  Val Loss:  0.19,  Val Acc: 93.98%,  Time: 0:44:02
+Iter:   1700,  Train Loss:  0.16,  Train Acc: 95.31%,  Val Loss:   0.2,  Val Acc: 93.64%,  Time: 0:46:43
+Iter:   1800,  Train Loss:  0.13,  Train Acc: 95.31%,  Val Loss:   0.2,  Val Acc: 94.06%,  Time: 0:49:24
+Iter:   1900,  Train Loss:  0.11,  Train Acc: 96.09%,  Val Loss:   0.2,  Val Acc: 93.72%,  Time: 0:52:05
+Iter:   2000,  Train Loss:  0.13,  Train Acc: 97.66%,  Val Loss:   0.2,  Val Acc: 93.84%,  Time: 0:54:46
+Iter:   2100,  Train Loss:  0.11,  Train Acc: 96.09%,  Val Loss:   0.2,  Val Acc: 93.72%,  Time: 0:57:27
+Iter:   2200,  Train Loss:  0.12,  Train Acc: 95.31%,  Val Loss:   0.2,  Val Acc: 94.05%,  Time: 1:00:08
+Iter:   2300,  Train Loss: 0.086,  Train Acc: 96.09%,  Val Loss:   0.2,  Val Acc: 93.75%,  Time: 1:02:49
+Iter:   2400,  Train Loss: 0.044,  Train Acc: 98.44%,  Val Loss:   0.2,  Val Acc: 93.78%,  Time: 1:05:30
+Iter:   2500,  Train Loss: 0.086,  Train Acc: 96.88%,  Val Loss:  0.21,  Val Acc: 93.67%,  Time: 1:08:10
+No optimization for a long time, auto-stopping...
+Test Loss:  0.18,  Test Acc: 94.27%
+Precision, Recall and F1-Score...
+               precision    recall  f1-score   support
+
+      finance     0.9264    0.9440    0.9351      1000
+       realty     0.9601    0.9380    0.9489      1000
+       stocks     0.9168    0.8930    0.9048      1000
+    education     0.9596    0.9750    0.9673      1000
+      science     0.9095    0.9140    0.9117      1000
+      society     0.9324    0.9510    0.9416      1000
+     politics     0.9286    0.9230    0.9258      1000
+       sports     0.9919    0.9770    0.9844      1000
+         game     0.9623    0.9440    0.9531      1000
+entertainment     0.9407    0.9680    0.9542      1000
+
+  avg / total     0.9428    0.9427    0.9427     10000
+
+Confusion Matrix...
+[[944  12  25   2   5   2   6   1   1   2]
+ [ 13 938  11   2   3   6  11   2   3  11]
+ [ 48  12 893   0  24   1  16   0   3   3]
+ [  1   1   1 975   0  14   5   0   0   3]
+ [  3   1  15   4 914  13  10   2  25  13]
+ [  1   8   2   9   5 951  13   0   2   9]
+ [  5   2  23  13  11  19 923   0   0   4]
+ [  1   2   2   2   2   4   3 977   0   7]
+ [  1   0   2   2  34   5   2   1 944   9]
+ [  2   1   0   7   7   5   5   2   3 968]]
+Time usage: 0:00:33

@@ -1,0 +1,4 @@
+bert_pretrain/bert-base-chinese.tar.gz
+bert_pretrain/pytorch_model.bin
+*/__pycache__/*
+THUCNews/saved_dict/*

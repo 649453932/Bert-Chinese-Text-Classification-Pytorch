@@ -31,7 +31,7 @@ def init_network(model, method='xavier', exclude='embedding', seed=123):
 def train(config, model, train_iter, dev_iter, test_iter):
     start_time = time.time()
     model.train()
-    param_optimizer = list(model.named_parameters())
+    param_optimizer = list(model.named_parameters())  # 模型的参数
     no_decay = ['bias', 'LayerNorm.bias', 'LayerNorm.weight']
     optimizer_grouped_parameters = [
         {'params': [p for n, p in param_optimizer if not any(nd in n for nd in no_decay)], 'weight_decay': 0.01},
@@ -48,7 +48,7 @@ def train(config, model, train_iter, dev_iter, test_iter):
     model.train()
     for epoch in range(config.num_epochs):
         print('Epoch [{}/{}]'.format(epoch + 1, config.num_epochs))
-        for i, (trains, labels) in enumerate(train_iter):
+        for i, (trains, labels) in enumerate(train_iter):  # 一次训练一个batch
             outputs = model(trains)
             model.zero_grad()
             loss = F.cross_entropy(outputs, labels)
