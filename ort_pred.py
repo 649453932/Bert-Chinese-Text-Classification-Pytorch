@@ -17,9 +17,11 @@ def to_numpy(tensor):
 def predict(sess, text):
     ids, seq_len, mask = build_predict_text(t)
 
+    '''
     print(text)
     print(ids)
     print(mask)
+    '''
 
     input = {
         sess.get_inputs()[0].name: to_numpy(ids),

@@ -29,6 +29,7 @@ def build_predict_text(text):
     mask = []
     token_ids = config.tokenizer.convert_tokens_to_ids(token)
     pad_size = config.pad_size
+    # 下面进行padding，用0补足位数
     if pad_size:
         if len(token) < pad_size:
             mask = [1] * len(token_ids) + ([0] * (pad_size - len(token)))
