@@ -63,3 +63,4 @@ if __name__ == '__main__':
                                     'seq_len' : {0 : 'batch_size'},
                                     'mask' : {0 : 'batch_size'},
                                     'output' : {0 : 'batch_size'}})
+
