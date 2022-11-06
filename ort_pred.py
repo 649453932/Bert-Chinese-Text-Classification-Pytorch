@@ -5,19 +5,13 @@ import numpy as np
 from pred import build_predict_text, key
 import time
 
-def to_numpy(tensor):
-    return tensor.detach().cpu().numpy() if tensor.requires_grad else tensor.cpu().numpy()
-
 def get_ort_session(model_path):
     providers = ort.get_available_providers()
     # ['TensorrtExecutionProvider', 'CUDAExecutionProvider', 'CPUExecutionProvider']
-    '''
-    ort_sess_dict = {}
-    for provider in providers:
-        ort_sess_dict[provider] = ort.InferenceSession(model_path, providers=[provider]) 
-    return ort_sess_dict
-    '''
     return [ort.InferenceSession(model_path, providers=[provider]) for provider in providers]
+
+def to_numpy(tensor):
+    return tensor.detach().cpu().numpy() if tensor.requires_grad else tensor.cpu().numpy()
 
 def predict(sess, text):
     data = build_predict_text(t)
