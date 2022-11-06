@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # coding=utf-8
-import onnxruntime
-import torch
+import onnxruntime as ort
 import numpy as np
 from pred import build_predict_text, key
 import time
@@ -9,10 +8,18 @@ import time
 def to_numpy(tensor):
     return tensor.detach().cpu().numpy() if tensor.requires_grad else tensor.cpu().numpy()
 
-#sess = onnxruntime.InferenceSession("./model.onnx", providers=["CUDAExecutionProvider"])    # use gpu
-sess = onnxruntime.InferenceSession("./model.onnx")    # use cpu
+def get_ort_session(model_path):
+    providers = ort.get_available_providers()
+    # ['TensorrtExecutionProvider', 'CUDAExecutionProvider', 'CPUExecutionProvider']
+    '''
+    ort_sess_dict = {}
+    for provider in providers:
+        ort_sess_dict[provider] = ort.InferenceSession(model_path, providers=[provider]) 
+    return ort_sess_dict
+    '''
+    return [ort.InferenceSession(model_path, providers=[provider]) for provider in providers]
 
-def predict(text):
+def predict(sess, text):
     data = build_predict_text(t)
     '''
     print(len(sess.get_inputs()))
@@ -30,13 +37,20 @@ def predict(text):
     return key[num]
 
 if __name__ == '__main__':
-    t = "李稻葵:过去2年抗疫为每人增寿10天"
-    t = "4个小学生离家出走30公里想去广州塔"
-    t = "朱一龙戏路打通电影电视剧"
-    t = "天问一号着陆火星一周年"
-
-    a = time.time()
-    print(predict(t))
-    b = time.time()
-    print(b - a)
+    ts = [
+        "李稻葵:过去2年抗疫为每人增寿10天",
+        "4个小学生离家出走30公里想去广州塔",
+        "朱一龙戏路打通电影电视剧",
+        "天问一号着陆火星一周年",
+    ]
+    sesses = get_ort_session("./model.onnx")
+    for sess in sesses: 
+        print("\n")
+        a = time.time()
+        for t in ts:
+            res = predict(sess, t)
+            print("%s is %s" % (t, res))
+        b = time.time()
+        provider = sess._providers[0]
+        print("%s cost: %.4f" % (provider, (b - a)))
 
