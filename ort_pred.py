@@ -3,6 +3,7 @@
 import onnxruntime as ort
 import numpy as np
 from pred import build_predict_text, key
+from pred import build_predict_text1
 import time
 
 def get_ort_session(model_path, providers = None):
@@ -16,16 +17,22 @@ def to_numpy(tensor):
 
 def predict(sess, text):
     ids, seq_len, mask = build_predict_text(t)
-
-    '''
-    print(text)
-    print(ids)
-    print(mask)
-    '''
+    print(type(ids))
 
     input = {
         sess.get_inputs()[0].name: to_numpy(ids),
         sess.get_inputs()[1].name: to_numpy(mask),
+    }
+    outs = sess.run(None, input)
+    num = np.argmax(outs)
+    return key[num]
+
+def predict1(sess, text):
+    ids, seq_len, mask = build_predict_text1(t)
+
+    input = {
+        sess.get_inputs()[0].name: np.array(ids),
+        sess.get_inputs()[1].name: np.array(mask),
     }
     outs = sess.run(None, input)
     num = np.argmax(outs)
@@ -53,6 +60,17 @@ if __name__ == '__main__':
         a = time.time()
         for t in ts:
             res = predict(sess, t)
+            print("%s is %s" % (t, res))
+        b = time.time()
+        provider = sess._providers[0]
+        print("%s cost: %.4f" % (provider, (b - a)))
+
+    print("==========")
+    for sess in sesses: 
+        print("\n")
+        a = time.time()
+        for t in ts:
+            res = predict1(sess, t)
             print("%s is %s" % (t, res))
         b = time.time()
         provider = sess._providers[0]
