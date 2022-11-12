@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 #include <onnxruntime_cxx_api.h>
-
+#include "util/tokenization.h"
 using namespace std;
 
 const static std::vector<std::string> key = {                                                                                                                                                                                                                     
@@ -47,7 +47,7 @@ public:
     //      };
 
         session_options.AppendExecutionProvider_CUDA(cuda_options);
-        ses_ = new Ort::Session(env, model_path, session_options);
+        ses_ = new Ort::Session(env, model_path.c_str(), session_options);
         auto& session = *ses_;
         size_t num_input_nodes = session.GetInputCount();
         std::cout<< num_input_nodes <<std::endl;
@@ -57,20 +57,27 @@ public:
     }
 
     std::vector<Ort::Value> build_input(const std::string& text) {
-        auto tokens = tokenizer.tokenize(text);
-        auto ids = tokenizer.convertTokensToIds(tokens);
+        std::string t = "[CLS]" + text;
+        auto tokens = tokenizer_->tokenize(text);
+        auto token_ids = tokenizer_->convertTokensToIds(tokens);
+        std::vector<int64_t> ids;
         std::vector<int64_t> mask;
         ids.resize(pad_size_);
         mask.resize(pad_size_);
+        ids[0] = 101;
+        mask[0] =  1;
 
-        for (int i = 0; i < pad_size_; ++i) {
-            if (0 == ids[i]) {
+        std::cout<<"len:" << ids.size()<<std::endl;
+        for (int i = 0; i < token_ids.size(); ++i) {
+            if (0 == token_ids[i]) {
                 break;
             }
-            mask[i] = 1;
+            ids[i+1] = token_ids[i];
+            mask[i+1] = 1;
             //mask[i] = ids[i] > 0;
-            std::cout << ids[i] << "\t" << std::endl;
+            std::cout << ids[i] << "\t" ;
         }
+        std::cout<<std::endl;
 
         std::vector<int64_t> input_node_dims = {1, 32};
         auto memory_info = Ort::MemoryInfo::CreateCpu(OrtArenaAllocator, OrtMemTypeDefault);
@@ -92,17 +99,17 @@ public:
         std::vector<const char*> input_node_names = {"ids", "mask"};
         std::vector<const char*> output_node_names = {"output"};
 
-        auto output_tensors = session.Run(Ort::RunOptions{nullptr}, input_node_names.data(), ort_inputs.data(),
+        auto output_tensors = ses_->Run(Ort::RunOptions{nullptr}, input_node_names.data(), ort_inputs.data(),
                                         ort_inputs.size(), output_node_names.data(), 1);
 
         float* output = output_tensors[0].GetTensorMutableData<float>();
 
-        return argmax(output, outpus+10);
+        return argmax(output, output+10);
     }
 
 private:
-    Ort::session* ses_ = nullptr;
-    FullTokenizer tokenizer_ = nullptr;
+    Ort::Session* ses_ = nullptr;
+    FullTokenizer* tokenizer_ = nullptr;
     int pad_size_ = 32;
 };
 
