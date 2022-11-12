@@ -22,58 +22,68 @@ const static std::vector<std::string> key = {
 };
 
 template <typename T>
-int argmax(const std::vector<T>& v) {
-    if (v.empty()) {
-        return -1;
-    }
-    return std::max_element(v.begin(), v.end()) - v.begin();
-}
-template <typename T>
 int argmax(T a, T b) {
     return std::max_element(a, b) - a;
 }
 
+class Predictor {
+public:
+    ~Predictor() {
+        delete ses_;
+    }
+    int Init(const std::string& model_path) {
+        Ort::Env env(ORT_LOGGING_LEVEL_WARNING, "test");
+        Ort::SessionOptions session_options;
+
+        OrtCUDAProviderOptions cuda_options; //= {
+    //          0,
+    //          //OrtCudnnConvAlgoSearch::EXHAUSTIVE,
+    //          OrtCudnnConvAlgoSearchExhaustive,
+    //          std::numeric_limits<size_t>::max(),
+    //          0,
+    //          true
+    //      };
+
+        session_options.AppendExecutionProvider_CUDA(cuda_options);
+        ses_ = new Ort::Session(env, model_path, session_options);
+        auto& session = *ses_;
+        size_t num_input_nodes = session.GetInputCount();
+        std::cout<< num_input_nodes <<std::endl;
+        std::cout<< session.GetOutputCount() <<std::endl;
+
+        auto tokenizer = FullTokenizer("/home/guodong/bert_pretrain/vocab.txt");
+
+
+    }
+private:
+    Ort::session* ses_ = nullptr;
+    FullTokenizer tokenizer_ = nullptr;
+};
 
 int main()
 {
-    Ort::Env env(ORT_LOGGING_LEVEL_WARNING, "test");
-    Ort::SessionOptions session_options;
-
-    OrtCUDAProviderOptions cuda_options; //= {
-//          0,
-//          //OrtCudnnConvAlgoSearch::EXHAUSTIVE,
-//          OrtCudnnConvAlgoSearchExhaustive,
-//          std::numeric_limits<size_t>::max(),
-//          0,
-//          true
-//      };
-
-    session_options.AppendExecutionProvider_CUDA(cuda_options);
     const char* model_path = "/home/guodong/github/Bert-Chinese-Text-Classification-Pytorch/model.onnx";
 
-//    int width = 900;
-//    int height = 32;
-//    int len_arr = width*height;
-//    float virtual_image[len_arr];
-//    for (int i=0; i<height; i++)
-//        for (int j=0; j<width; j++)
-//        {
-//            virtual_image[int(i*width+j)] = 1; // range
-//        }
-//
+    std::string line;
+    while (std::getline(std::cin, line)) {
+        auto tokens = tokenizer.tokenize(line);
+        auto ids = tokenizer.convertTokensToIds(tokens);
+        std::cout << "#" << convertFromUnicode(boost::join(tokens, L" ")) << "#" << "\t";
+        for (size_t i = 0; i < ids.size(); i++) {
+            if (i!=0) std::cout << " ";
+            std::cout << ids[i];
+        }
+        std::cout << std::endl;
+    }
+
     std::vector<int> virtual_image = {101, 3330, 4940, 5878,  131, 6814, 1343,  123, 2399, 2834, 4554,  711,
                                      3680,  782, 1872, 2195, 8108, 1921,    0,    0,    0,    0,    0,    0,
                                      0,    0,    0,    0,    0,    0,    0,    0};
 
-    Ort::Session session(env, model_path, session_options);
     // print model input layer (node names, types, shape etc.)
-    Ort::AllocatorWithDefaultOptions allocator;
+    //Ort::AllocatorWithDefaultOptions allocator;
 
     // print number of model input nodes
-    size_t num_input_nodes = session.GetInputCount();
-    std::cout<< num_input_nodes <<std::endl;
-    std::cout<< session.GetOutputCount() <<std::endl;
-
     std::vector<int64_t> input_node_dims = {1, 32};
 
     size_t input_tensor_size = 32;
@@ -83,6 +93,7 @@ int main()
         input_tensor_values[i] = int64_t(virtual_image[i]);
         mask_tensor_values[i] = int64_t(virtual_image[i]) != 0;
     }
+    /*
     for (auto i : input_tensor_values) {
         std::cout << i << "\t" ;
     }
@@ -91,6 +102,7 @@ std::cout<<std::endl;
         std::cout << i << "\t" ;
     }
 std::cout<<std::endl;
+    */
         
     // create input tensor object from data values ！！！！！！！！！！
     auto memory_info = Ort::MemoryInfo::CreateCpu(OrtArenaAllocator, OrtMemTypeDefault);
