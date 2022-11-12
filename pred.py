@@ -21,7 +21,7 @@ config = x.Config('THUCNews')
 model = x.Model(config).to(config.device)
 model.load_state_dict(torch.load(config.save_path, map_location='cpu'))
 
-def build_predict_text(text):
+def build_predict_text_raw(text):
     token = config.tokenizer.tokenize(text)
     token = ['[CLS]'] + token
     seq_len = len(token)
@@ -37,11 +37,15 @@ def build_predict_text(text):
             mask = [1] * pad_size
             token_ids = token_ids[:pad_size]
             seq_len = pad_size
+    return token_ids, seq_len, mask
+
+def build_predict_text(text):
+    token_ids, seq_len, mask = build_predict_text_raw(text)
     ids = torch.LongTensor([token_ids]).cuda()
     seq_len = torch.LongTensor([seq_len]).cuda()
     mask = torch.LongTensor([mask]).cuda()
-    return ids, seq_len, mask
 
+    return ids, seq_len, mask
 
 def predict(text):
     """
