@@ -38,6 +38,17 @@ def predict1(sess, text):
     num = np.argmax(outs)
     return key[num]
 
+def predict2(sess, text):
+    ids, seq_len, mask = build_predict_text1(t)
+
+    input = {
+        'ids': np.array(ids),
+        'mask': np.array(mask),
+    }
+    outs = sess.run(None, input)
+    num = np.argmax(outs)
+    return key[num]
+
 if __name__ == '__main__':
     #sesses = get_ort_session("./model.onnx", ['CUDAExecutionProvider', 'CPUExecutionProvider'])
     sesses = get_ort_session("./model.onnx", ['CUDAExecutionProvider'])
@@ -65,7 +76,6 @@ if __name__ == '__main__':
         provider = sess._providers[0]
         print("%s cost: %.4f" % (provider, (b - a)))
 
-    print("==========")
     for sess in sesses: 
         print("\n")
         a = time.time()
@@ -76,3 +86,12 @@ if __name__ == '__main__':
         provider = sess._providers[0]
         print("%s cost: %.4f" % (provider, (b - a)))
 
+    for sess in sesses: 
+        print("\n")
+        a = time.time()
+        for t in ts:
+            res = predict2(sess, t)
+            print("%s is %s" % (t, res))
+        b = time.time()
+        provider = sess._providers[0]
+        print("%s cost: %.4f" % (provider, (b - a)))

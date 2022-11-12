@@ -5,7 +5,8 @@ model_name = 'bert'
 x = import_module('models.' + model_name)
 config = x.Config('THUCNews')
 model = x.Model(config).to(config.device)
-model.load_state_dict(torch.load(config.save_path, map_location='cpu')) # CPU?
+#model.load_state_dict(torch.load(config.save_path, map_location='cpu')) # CPU?
+model.load_state_dict(torch.load(config.save_path)) # CPU?
 
 def build_predict_text(text):
     token = config.tokenizer.tokenize(text)
@@ -37,7 +38,7 @@ def build_input_data1():
     ids = torch.LongTensor([[0]*pad_size]).cuda()
     seq_len = torch.LongTensor([0]).cuda()
     mask = torch.LongTensor([[0]*pad_size]).cuda()
-    return [ids, seq_len, mask]
+    return ids, seq_len, mask
 
 def build_input_data2():
     pad_size = config.pad_size
@@ -49,11 +50,11 @@ def build_input_data2():
 
 
 if __name__ == '__main__':
-    data = build_input_data0()
+    data = build_input_data1()
 
     input_names = ['ids','seq_len', 'mask']
     torch.onnx.export(model, 
-                      data,
+                      (data,),
                       'model.onnx',
                       export_params = True,
                       opset_version=11,
