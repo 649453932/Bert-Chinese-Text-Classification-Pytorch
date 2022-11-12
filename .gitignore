@@ -3,4 +3,6 @@
 *.ckpt
 *.onnx
 *.tar.gz
+core.*
+*.out
 __pycache__

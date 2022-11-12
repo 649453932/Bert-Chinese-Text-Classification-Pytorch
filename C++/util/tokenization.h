@@ -4,6 +4,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <memory>
 #include <unordered_map>
 
 //https://unicode.org/reports/tr15/#Norm_Forms

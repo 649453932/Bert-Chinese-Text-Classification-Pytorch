@@ -34,7 +34,8 @@ public:
     }
 
     Predictor(const std::string& model_path, const std::string& vocab_path) {
-        Ort::Env env(ORT_LOGGING_LEVEL_WARNING, "test");
+        //Ort::Env env(ORT_LOGGING_LEVEL_WARNING, "test");
+        Ort::Env env(ORT_LOGGING_LEVEL_VERBOSE, "test");
         Ort::SessionOptions session_options;
 
         OrtCUDAProviderOptions cuda_options; //= {
@@ -48,6 +49,8 @@ public:
 
         session_options.AppendExecutionProvider_CUDA(cuda_options);
         ses_ = new Ort::Session(env, model_path.c_str(), session_options);
+            Ort::AllocatorWithDefaultOptions allocator;
+
         auto& session = *ses_;
         size_t num_input_nodes = session.GetInputCount();
         std::cout<< num_input_nodes <<std::endl;
@@ -60,10 +63,8 @@ public:
         std::string t = "[CLS]" + text;
         auto tokens = tokenizer_->tokenize(text);
         auto token_ids = tokenizer_->convertTokensToIds(tokens);
-        std::vector<int64_t> ids;
-        std::vector<int64_t> mask;
-        ids.resize(pad_size_);
-        mask.resize(pad_size_);
+        std::vector<int64_t> ids(pad_size_);
+        std::vector<int64_t> mask(pad_size_);
         ids[0] = 101;
         mask[0] =  1;
 
@@ -75,12 +76,19 @@ public:
             ids[i+1] = token_ids[i];
             mask[i+1] = 1;
             //mask[i] = ids[i] > 0;
+        }
+        for (int i = 0; i < pad_size_; ++i) {
             std::cout << ids[i] << "\t" ;
+        }
+        std::cout<<std::endl;
+        for (int i = 0; i < pad_size_; ++i) {
+            std::cout << mask[i] << "\t" ;
         }
         std::cout<<std::endl;
 
         std::vector<int64_t> input_node_dims = {1, 32};
         auto memory_info = Ort::MemoryInfo::CreateCpu(OrtArenaAllocator, OrtMemTypeDefault);
+
 
         Ort::Value input_tensor = Ort::Value::CreateTensor<int64_t>(memory_info, ids.data(),
                                                                 pad_size_, input_node_dims.data(), 2);
@@ -91,6 +99,17 @@ public:
         std::vector<Ort::Value> ort_inputs;
         ort_inputs.push_back(std::move(input_tensor));
         ort_inputs.push_back(std::move(mask_tensor));
+        std::cout<<"----"<<std::endl;
+        std::vector<const char*> input_node_names = {"ids", "mask"};
+        std::vector<const char*> output_node_names = {"output"};
+
+        auto output_tensors = ses_->Run(Ort::RunOptions{nullptr}, input_node_names.data(), ort_inputs.data(),
+                                        ort_inputs.size(), output_node_names.data(), 1);
+
+        float* output = output_tensors[0].GetTensorMutableData<float>();
+        std::cout<<"----"<<std::endl;
+
+        std::cout<< argmax(output, output+10)<<std::endl;
         return ort_inputs;
     }
 
@@ -110,7 +129,10 @@ public:
 private:
     Ort::Session* ses_ = nullptr;
     FullTokenizer* tokenizer_ = nullptr;
-    int pad_size_ = 32;
+    size_t pad_size_ = 32;
+    //Ort::MemoryInfo* memory_info_ = nullptr;
+    //Ort::MemoryInfo memory_info;
+
 };
 
 int main()
