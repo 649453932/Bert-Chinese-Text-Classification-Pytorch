@@ -1,3 +1,4 @@
+#pragma once
 // 本文件源码改编自 https://gist.github.com/luistung/ace4888cf5fd1bad07844021cb2c7ecf
 // 感谢
 #include <iostream>

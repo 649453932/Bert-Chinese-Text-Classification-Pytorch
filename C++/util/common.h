@@ -21,3 +21,8 @@ inline int64_t gettimeofday_us() {
     gettimeofday(&now, NULL);
     return now.tv_sec * 1000000L + now.tv_usec;
 }
+
+template <typename T>
+int argmax(T a, T b) {
+    return std::max_element(a, b) - a;
+}
