@@ -1,4 +1,5 @@
 #pragma once
+#include <sys/time.h>
 #include <vector>
 #include <iostream>
 
@@ -15,3 +16,8 @@ std::ostream& operator<<(std::ostream& out, std::vector<T>& c) {
 }
 
 
+inline int64_t gettimeofday_us() {
+    timeval now;
+    gettimeofday(&now, NULL);
+    return now.tv_sec * 1000000L + now.tv_usec;
+}

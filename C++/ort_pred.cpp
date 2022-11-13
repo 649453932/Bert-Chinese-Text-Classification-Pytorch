@@ -137,8 +137,10 @@ int main() {
     
     std::string line;
     while (std::getline(std::cin, line)) {
+        auto a = gettimeofday_us();
         int idx = model.predict(line);
-        std::cout << line << " is " << key[idx] << std::endl;
+        auto b = gettimeofday_us();
+        std::cout << line << " is " << key[idx] << " cost:" << (b-a) <<" us" <<std::endl;
     }
 
     return 0;
