@@ -47,7 +47,7 @@ int main(int argc, char* argv[]) {
         guodongxiaren::NewsClassifyResponse response;
         brpc::Controller cntl;
 
-        request.set_message("hello world");
+        request.set_title("李稻葵:过去2年抗疫为每人增寿10天");
 
         cntl.set_log_id(log_id ++);  // set by user
         // Set attachment which is wired to network directly instead of 
@@ -60,7 +60,7 @@ int main(int argc, char* argv[]) {
         if (!cntl.Failed()) {
             LOG(INFO) << "Received response from " << cntl.remote_side()
                 << " to " << cntl.local_side()
-                << ": " << response.message() << " (attached="
+                << ": " << response.result() << " (attached="
                 << cntl.response_attachment() << ")"
                 << " latency=" << cntl.latency_us() << "us";
         } else {

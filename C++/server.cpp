@@ -3,7 +3,6 @@
 #include <brpc/server.h>
 #include "infer.pb.h"
 
-DEFINE_bool(echo_attachment, true, "Echo attachment as well");
 DEFINE_int32(port, 8000, "TCP Port of this server");
 DEFINE_string(listen_addr, "", "Server listen address, may be IPV4/IPV6/UDS."
             " If this is set, the flag port will be ignored");
@@ -29,32 +28,22 @@ public:
         LOG(INFO) << "Received request[log_id=" << cntl->log_id() 
                   << "] from " << cntl->remote_side() 
                   << " to " << cntl->local_side()
-                  << ": " << request->message()
+                  << ": " << request->title()
                   << " (attached=" << cntl->request_attachment() << ")";
 
-        //response->set_message(request->message());
+        //response->set_message(request->result());
 
-        if (FLAGS_echo_attachment) {
-            cntl->response_attachment().append(cntl->request_attachment());
-        }
     }
 };
-}  // namespace guodongxiaren
+} // namespace guodongxiaren
 
 int main(int argc, char* argv[]) {
-    // Parse gflags. We recommend you to use gflags as well.
-    //GFLAGS_NS::ParseCommandLineFlags(&argc, &argv, true);
     gflags::ParseCommandLineFlags(&argc, &argv, true);
 
-    // Generally you only need one Server.
     brpc::Server server;
 
-    // Instance of your service.
     guodongxiaren::InferServiceImpl echo_service_impl;
 
-    // Add the service into server. Notice the second parameter, because the
-    // service is put on stack, we don't want server to delete it, otherwise
-    // use brpc::SERVER_OWNS_SERVICE.
     if (server.AddService(&echo_service_impl, 
                           brpc::SERVER_DOESNT_OWN_SERVICE) != 0) {
         LOG(ERROR) << "Fail to add service";
@@ -70,7 +59,6 @@ int main(int argc, char* argv[]) {
     } else {
         point = butil::EndPoint(butil::IP_ANY, FLAGS_port);
     }
-    // Start the server.
     brpc::ServerOptions options;
     options.idle_timeout_sec = FLAGS_idle_timeout_s;
     if (server.Start(point, &options) != 0) {
@@ -78,7 +66,6 @@ int main(int argc, char* argv[]) {
         return -1;
     }
 
-    // Wait until Ctrl-C is pressed, then Stop() and Join() the server.
     server.RunUntilAskedToQuit();
     return 0;
 }
