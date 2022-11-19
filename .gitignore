@@ -3,6 +3,10 @@
 *.ckpt
 *.onnx
 *.tar.gz
-core.*
+*.o
+*.a
+*.so
 *.out
+*.bak
+core.*
 __pycache__
