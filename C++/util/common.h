@@ -1,7 +1,8 @@
 #pragma once
 #include <sys/time.h>
-#include <vector>
 #include <iostream>
+#include <iterator>
+#include <vector>
 
 template <typename T>
 std::ostream& operator<<(std::ostream& out, std::vector<T>& c) {
@@ -23,6 +24,6 @@ inline int64_t gettimeofday_us() {
 }
 
 template <typename T>
-int argmax(T a, T b) {
-    return std::max_element(a, b) - a;
+int argmax(T begin, T end) {
+    return std::distance(begin, std::max_element(begin, end));
 }

@@ -85,8 +85,8 @@ int Model::infer(const std::string& text) {
     ort_inputs.push_back(std::move(input_tensor));
     ort_inputs.push_back(std::move(mask_tensor));
 
-    std::vector<const char*> input_node_names = {"ids", "mask"};
-    std::vector<const char*> output_node_names = {"output"};
+    const static std::vector<const char*> input_node_names = {"ids", "mask"};
+    const static std::vector<const char*> output_node_names = {"output"};
     auto output_tensors = session.Run(Ort::RunOptions{nullptr}, input_node_names.data(), ort_inputs.data(),
                                     ort_inputs.size(), output_node_names.data(), 1);
 
@@ -94,11 +94,12 @@ int Model::infer(const std::string& text) {
         return -1;
     }
     std::cout<<output_tensors.size()<<std::endl;
-    float* floatarr = output_tensors[0].GetTensorMutableData<float>();
+    //float* output = output_tensors[0].GetTensorMutableData<float>();
+    const float* output = output_tensors[0].GetTensorData<float>();
 
     //for (int i = 0; i < 10; i++) {
     //    std::cout<<floatarr[i]<<std::endl;
     //}
-    return argmax(floatarr, floatarr+10);
+    return argmax(output, output+10);
 }
 
