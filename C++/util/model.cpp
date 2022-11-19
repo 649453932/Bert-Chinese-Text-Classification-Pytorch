@@ -46,7 +46,12 @@ std::vector<std::vector<int64_t>> Model::build_input(const std::string& text) {
     return res;
 }
 
-int Model::predict(const std::string& text) {
+std::string Model::predict(const std::string& text) {
+    int idx = infer(text);
+    return key[idx];
+}
+
+int Model::infer(const std::string& text) {
     auto& session = *ses_;
 
     auto res = build_input(text);
@@ -55,8 +60,8 @@ int Model::predict(const std::string& text) {
     auto& input_tensor_values = res[0];
     auto& mask_tensor_values = res[1];
 
-    std::cout<<input_tensor_values;
-    std::cout<<mask_tensor_values;
+    //std::cout<<input_tensor_values;
+    //std::cout<<mask_tensor_values;
     //size_t input_tensor_size = 32;
     //for (auto i : input_tensor_values) {
     //    std::cout << i << "\t" ;
@@ -87,9 +92,9 @@ int Model::predict(const std::string& text) {
 
     float* floatarr = output_tensors[0].GetTensorMutableData<float>();
 
-    for (int i = 0; i < 10; i++) {
-        std::cout<<floatarr[i]<<std::endl;
-    }
+    //for (int i = 0; i < 10; i++) {
+    //    std::cout<<floatarr[i]<<std::endl;
+    //}
     return argmax(floatarr, floatarr+10);
 }
 
