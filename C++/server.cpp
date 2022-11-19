@@ -1,7 +1,7 @@
 #include <gflags/gflags.h>
 #include <butil/logging.h>
 #include <brpc/server.h>
-#include "echo.pb.h"
+#include "infer.pb.h"
 
 DEFINE_bool(echo_attachment, true, "Echo attachment as well");
 DEFINE_int32(port, 8000, "TCP Port of this server");
@@ -12,14 +12,14 @@ DEFINE_int32(idle_timeout_s, -1, "Connection will be closed if there is no "
 DEFINE_int32(logoff_ms, 2000, "Maximum duration of server's LOGOFF state "
              "(waiting for client to close connection before server stops)");
 
-namespace example {
-class EchoServiceImpl : public EchoService {
+namespace guodongxiaren {
+class InferServiceImpl : public InferService {
 public:
-    EchoServiceImpl() {};
-    virtual ~EchoServiceImpl() {};
-    virtual void Echo(google::protobuf::RpcController* cntl_base,
-                      const EchoRequest* request,
-                      EchoResponse* response,
+    InferServiceImpl() {};
+    virtual ~InferServiceImpl() {};
+    virtual void NewsClassify(google::protobuf::RpcController* cntl_base,
+                      const NewsClassifyRequest* request,
+                      NewsClassifyResponse* response,
                       google::protobuf::Closure* done) {
         brpc::ClosureGuard done_guard(done);
 
@@ -32,14 +32,14 @@ public:
                   << ": " << request->message()
                   << " (attached=" << cntl->request_attachment() << ")";
 
-        response->set_message(request->message());
+        //response->set_message(request->message());
 
         if (FLAGS_echo_attachment) {
             cntl->response_attachment().append(cntl->request_attachment());
         }
     }
 };
-}  // namespace example
+}  // namespace guodongxiaren
 
 int main(int argc, char* argv[]) {
     // Parse gflags. We recommend you to use gflags as well.
@@ -50,7 +50,7 @@ int main(int argc, char* argv[]) {
     brpc::Server server;
 
     // Instance of your service.
-    example::EchoServiceImpl echo_service_impl;
+    guodongxiaren::InferServiceImpl echo_service_impl;
 
     // Add the service into server. Notice the second parameter, because the
     // service is put on stack, we don't want server to delete it, otherwise

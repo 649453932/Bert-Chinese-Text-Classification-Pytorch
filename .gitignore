@@ -8,5 +8,6 @@
 *.so
 *.out
 *.bak
+*.pb.*
 core.*
 __pycache__

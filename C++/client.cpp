@@ -3,7 +3,7 @@
 #include <butil/logging.h>
 #include <butil/time.h>
 #include <brpc/channel.h>
-#include "echo.pb.h"
+#include "infer.pb.h"
 
 DEFINE_string(attachment, "", "Carry this along with requests");
 DEFINE_string(protocol, "baidu_std", "Protocol type. Defined in src/brpc/options.proto");
@@ -36,15 +36,15 @@ int main(int argc, char* argv[]) {
 
     // Normally, you should not call a Channel directly, but instead construct
     // a stub Service wrapping it. stub can be shared by all threads as well.
-    example::EchoService_Stub stub(&channel);
+    guodongxiaren::InferService_Stub stub(&channel);
 
     // Send a request and wait for the response every 1 second.
     int log_id = 0;
     while (!brpc::IsAskedToQuit()) {
         // We will receive response synchronously, safe to put variables
         // on stack.
-        example::EchoRequest request;
-        example::EchoResponse response;
+        guodongxiaren::NewsClassifyRequest request;
+        guodongxiaren::NewsClassifyResponse response;
         brpc::Controller cntl;
 
         request.set_message("hello world");
@@ -56,7 +56,7 @@ int main(int argc, char* argv[]) {
 
         // Because `done'(last parameter) is NULL, this function waits until
         // the response comes back or error occurs(including timedout).
-        stub.Echo(&cntl, &request, &response, NULL);
+        stub.NewsClassify(&cntl, &request, &response, NULL);
         if (!cntl.Failed()) {
             LOG(INFO) << "Received response from " << cntl.remote_side()
                 << " to " << cntl.local_side()
@@ -69,6 +69,6 @@ int main(int argc, char* argv[]) {
         usleep(FLAGS_interval_ms * 1000L);
     }
 
-    LOG(INFO) << "EchoClient is going to quit";
+    LOG(INFO) << "NewsClassifyClient is going to quit";
     return 0;
 }

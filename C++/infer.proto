@@ -1,0 +1,16 @@
+syntax="proto2";
+package guodongxiaren;
+
+option cc_generic_services = true;
+
+message NewsClassifyRequest {
+    required string message = 1;
+};
+
+message NewsClassifyResponse {
+    required string message = 1;
+};
+
+service InferService {
+    rpc NewsClassify(NewsClassifyRequest) returns (NewsClassifyResponse);
+};
