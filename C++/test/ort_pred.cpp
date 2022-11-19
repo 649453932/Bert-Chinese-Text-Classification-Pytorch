@@ -51,23 +51,13 @@ int main()
     session_options.AppendExecutionProvider_CUDA(cuda_options);
     const char* model_path = "/home/guodong/github/Bert-Chinese-Text-Classification-Pytorch/model.onnx";
 
-//    int width = 900;
-//    int height = 32;
-//    int len_arr = width*height;
-//    float virtual_image[len_arr];
-//    for (int i=0; i<height; i++)
-//        for (int j=0; j<width; j++)
-//        {
-//            virtual_image[int(i*width+j)] = 1; // range
-//        }
-//
-    std::vector<int> virtual_image = {101, 3330, 4940, 5878,  131, 6814, 1343,  123, 2399, 2834, 4554,  711,
-                                     3680,  782, 1872, 2195, 8108, 1921,    0,    0,    0,    0,    0,    0,
-                                     0,    0,    0,    0,    0,    0,    0,    0};
+    std::vector<int> token_ids = {101, 3330, 4940, 5878,  131, 6814, 1343,  123, 2399, 2834, 4554,  711,
+                                  3680,  782, 1872, 2195, 8108, 1921,    0,    0,    0,    0,    0,    0,
+                                  0,    0,    0,    0,    0,    0,    0,    0};
 
     Ort::Session session(env, model_path, session_options);
     // print model input layer (node names, types, shape etc.)
-    Ort::AllocatorWithDefaultOptions allocator;
+    //Ort::AllocatorWithDefaultOptions allocator;
 
     // print number of model input nodes
     size_t num_input_nodes = session.GetInputCount();
@@ -80,17 +70,9 @@ int main()
     std::vector<int64_t> input_tensor_values(input_tensor_size);
     std::vector<int64_t> mask_tensor_values(input_tensor_size);
     for (unsigned int i = 0; i < input_tensor_size; i++) {
-        input_tensor_values[i] = int64_t(virtual_image[i]);
-        mask_tensor_values[i] = int64_t(virtual_image[i]) != 0;
+        input_tensor_values[i] = int64_t(token_ids[i]);
+        mask_tensor_values[i] = int64_t(token_ids[i]) != 0;
     }
-    for (auto i : input_tensor_values) {
-        std::cout << i << "\t" ;
-    }
-std::cout<<std::endl;
-    for (auto i : mask_tensor_values) {
-        std::cout << i << "\t" ;
-    }
-std::cout<<std::endl;
         
     // create input tensor object from data values ！！！！！！！！！！
     auto memory_info = Ort::MemoryInfo::CreateCpu(OrtArenaAllocator, OrtMemTypeDefault);

@@ -55,7 +55,7 @@ int Model::infer(const std::string& text) {
     auto& session = *ses_;
 
     auto res = build_input(text);
-    std::vector<int64_t> input_node_dims = {1, 32};
+    std::vector<int64_t> shape = {1, 32};
 
     auto& input_tensor_values = res[0];
     auto& mask_tensor_values = res[1];
@@ -76,10 +76,10 @@ int Model::infer(const std::string& text) {
     auto memory_info = Ort::MemoryInfo::CreateCpu(OrtArenaAllocator, OrtMemTypeDefault);
 
     Ort::Value input_tensor = Ort::Value::CreateTensor<int64_t>(memory_info, input_tensor_values.data(),
-                                                            input_tensor_values.size(), input_node_dims.data(), 2);
+                                                            input_tensor_values.size(), shape.data(), 2);
 
     Ort::Value mask_tensor = Ort::Value::CreateTensor<int64_t>(memory_info, mask_tensor_values.data(),
-                                                            mask_tensor_values.size(), input_node_dims.data(), 2);
+                                                            mask_tensor_values.size(), shape.data(), 2);
 
     std::vector<Ort::Value> ort_inputs;
     ort_inputs.push_back(std::move(input_tensor));
@@ -90,6 +90,10 @@ int Model::infer(const std::string& text) {
     auto output_tensors = session.Run(Ort::RunOptions{nullptr}, input_node_names.data(), ort_inputs.data(),
                                     ort_inputs.size(), output_node_names.data(), 1);
 
+    if (output_tensors.size() != output_node_names.size()) {
+        return -1;
+    }
+    std::cout<<output_tensors.size()<<std::endl;
     float* floatarr = output_tensors[0].GetTensorMutableData<float>();
 
     //for (int i = 0; i < 10; i++) {

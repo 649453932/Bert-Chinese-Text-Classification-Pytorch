@@ -15,8 +15,8 @@ DEFINE_int32(logoff_ms, 2000, "Maximum duration of server's LOGOFF state "
 namespace guodongxiaren {
 class InferServiceImpl : public InferService {
 public:
-    InferServiceImpl() {};
-    virtual ~InferServiceImpl() { delete model; };
+    InferServiceImpl() {}
+    virtual ~InferServiceImpl() { delete model; }
     virtual void NewsClassify(google::protobuf::RpcController* cntl_base,
                       const NewsClassifyRequest* request,
                       NewsClassifyResponse* response,
