@@ -8,7 +8,7 @@
 #include "util/tokenization.h"
 #include "util/common.h"
 
-const static std::vector<std::string> key = {                                                                                                                                                                                                                     
+const static std::vector<std::string> kNames = {            
     "finance",
     "realty",
     "stocks",
@@ -25,11 +25,16 @@ const static std::vector<std::string> key = {
 class Model {
 public:
     Model(const std::string& model_path, const std::string& vocab_path);
+    ~Model() {delete tokenizer_; delete ses_;}
 
-    std::string predict(const std::string& text);
-    int infer(const std::string& text);
+    // 执行文本预测，返回预测的分类ID
+    int infer(const std::string& text, float* score=nullptr);
+
+    // 执行文本预测，返回预测的分类名称
+    std::string predict(const std::string& text, float* score=nullptr);
 
 protected:
+    // 将文本向量化，返回ids和mask两个向量
     std::vector<std::vector<int64_t>> build_input(const std::string& text);
         
 private:

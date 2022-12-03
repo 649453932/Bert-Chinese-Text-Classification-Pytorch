@@ -46,12 +46,12 @@ std::vector<std::vector<int64_t>> Model::build_input(const std::string& text) {
     return res;
 }
 
-std::string Model::predict(const std::string& text) {
-    int idx = infer(text);
-    return key[idx];
+std::string Model::predict(const std::string& text, float* score) {
+    int idx = infer(text, score);
+    return (idx >= 0 && idx < kNames.size()) ? kNames[idx] : "Unknown";
 }
 
-int Model::infer(const std::string& text) {
+int Model::infer(const std::string& text, float* score) {
     auto& session = *ses_;
 
     auto res = build_input(text);
@@ -60,20 +60,7 @@ int Model::infer(const std::string& text) {
     auto& input_tensor_values = res[0];
     auto& mask_tensor_values = res[1];
 
-    //std::cout<<input_tensor_values;
-    //std::cout<<mask_tensor_values;
-    //size_t input_tensor_size = 32;
-    //for (auto i : input_tensor_values) {
-    //    std::cout << i << "\t" ;
-    //}
-    //std::cout<<std::endl;
-    //for (auto i : mask_tensor_values) {
-    //    std::cout << i << "\t" ;
-    //}
-    //std::cout<<std::endl;
-        
-    // create input tensor object from data values ！！！！！！！！！！
-    auto memory_info = Ort::MemoryInfo::CreateCpu(OrtArenaAllocator, OrtMemTypeDefault);
+    const static auto memory_info = Ort::MemoryInfo::CreateCpu(OrtArenaAllocator, OrtMemTypeDefault);
 
     Ort::Value input_tensor = Ort::Value::CreateTensor<int64_t>(memory_info, input_tensor_values.data(),
                                                             input_tensor_values.size(), shape.data(), 2);
@@ -93,13 +80,13 @@ int Model::infer(const std::string& text) {
     if (output_tensors.size() != output_node_names.size()) {
         return -1;
     }
-    std::cout<<output_tensors.size()<<std::endl;
     //float* output = output_tensors[0].GetTensorMutableData<float>();
     const float* output = output_tensors[0].GetTensorData<float>();
 
-    //for (int i = 0; i < 10; i++) {
-    //    std::cout<<floatarr[i]<<std::endl;
-    //}
-    return argmax(output, output+10);
+    int idx = argmax(output, output+10);
+    if (score != nullptr) {
+        *score = output[idx];
+    }
+    return idx;
 }
 

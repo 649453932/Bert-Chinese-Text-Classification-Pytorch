@@ -1,6 +1,7 @@
 #include <gflags/gflags.h>
 #include <butil/logging.h>
 #include <brpc/server.h>
+#include <butil/time.h>
 #include "infer.pb.h"
 #include "util/model.h"
 
@@ -21,16 +22,24 @@ public:
                       const NewsClassifyRequest* request,
                       NewsClassifyResponse* response,
                       google::protobuf::Closure* done) {
+        auto beg_us = butil::gettimeofday_us();
         brpc::ClosureGuard done_guard(done);
 
         brpc::Controller* cntl =
             static_cast<brpc::Controller*>(cntl_base);
 
-        auto result = model->predict(request->title());
-        LOG(INFO) << " " << request->title()
-                  << " is " << result;
+        float score = 0.0f;
+        auto result = model->predict(request->title(), &score);
 
-        response->set_result(request->title());
+        response->set_result(result);
+        response->set_score(score);
+
+        auto end_us = butil::gettimeofday_us();
+        LOG(INFO) << " " << request->title()
+                  << " is " << result
+                  << " score: " << score
+                  << " cost us:" << end_us - beg_us;
+
     }
 
     int Init(const std::string& model_path, const std::string& vocab_path) {

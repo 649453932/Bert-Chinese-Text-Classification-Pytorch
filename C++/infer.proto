@@ -9,6 +9,7 @@ message NewsClassifyRequest {
 
 message NewsClassifyResponse {
     required string result = 1;
+    optional float score = 2;
 };
 
 service InferService {

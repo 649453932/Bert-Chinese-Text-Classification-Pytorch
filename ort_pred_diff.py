@@ -71,7 +71,7 @@ def batch_predict(ts, predict_fun, name):
         res = predict_fun(t)
         print('%s is %s' % (t, res))
     b = time.time()
-    print('%s cost: %.4f' % (name, (b - a)))
+    print('%s cost: %.4fs' % (name, (b - a)))
 
 if __name__ == '__main__':
     model_path = './model.onnx'
