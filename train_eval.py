@@ -36,16 +36,18 @@ def train(config, model, train_iter, dev_iter, test_iter):
     optimizer_grouped_parameters = [
         {'params': [p for n, p in param_optimizer if not any(nd in n for nd in no_decay)], 'weight_decay': 0.01},
         {'params': [p for n, p in param_optimizer if any(nd in n for nd in no_decay)], 'weight_decay': 0.0}]
-    # optimizer = torch.optim.Adam(model.parameters(), lr=config.learning_rate)
-    optimizer = BertAdam(optimizer_grouped_parameters,
-                         lr=config.learning_rate,
-                         warmup=0.05,
-                         t_total=len(train_iter) * config.num_epochs)
+    #optimizer = torch.optim.Adam(model.parameters(), lr=config.learning_rate)
+    # optimizer = BertAdam(optimizer_grouped_parameters,
+    #                      lr=config.learning_rate,
+    #                      warmup=0.05,
+    #                      t_total=len(train_iter) * config.num_epochs)
+    optimizer = torch.optim.AdamW(model.parameters(), lr=config.learning_rate, weight_decay=0.01, betas=(0.9, 0.999), eps=1e-8)
     total_batch = 0  # 记录进行到多少batch
     dev_best_loss = float('inf')
     last_improve = 0  # 记录上次验证集loss下降的batch数
     flag = False  # 记录是否很久没有效果提升
     model.train()
+    time_start = time.time()
     for epoch in range(config.num_epochs):
         print('Epoch [{}/{}]'.format(epoch + 1, config.num_epochs))
         for i, (trains, labels) in enumerate(train_iter):
@@ -79,6 +81,8 @@ def train(config, model, train_iter, dev_iter, test_iter):
                 break
         if flag:
             break
+    print(f"training time = {time.time() - start_time}")
+
     test(config, model, test_iter)
 
 
