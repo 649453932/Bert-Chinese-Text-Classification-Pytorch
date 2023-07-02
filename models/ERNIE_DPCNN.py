@@ -26,7 +26,7 @@ class Config(object):
         self.pad_size = 32                                              # 每句话处理成的长度(短填长切)
         self.learning_rate = 5e-5                                       # 学习率
         # self.bert_path = './bert_pretrain'
-        self.bert_path = 'bert-base-chinese'
+        self.bert_path = 'nghuyong/ernie-3.0-base-zh'
         self.tokenizer = BertTokenizer.from_pretrained(self.bert_path)
         self.hidden_size = 768
         self.num_filters = 250                                          # 卷积核数量(channels数)
@@ -38,7 +38,7 @@ class Model(nn.Module):
         super(Model, self).__init__()
         self.bert = BertModel.from_pretrained(config.bert_path)
         for param in self.bert.parameters():
-            param.requires_grad = False
+            param.requires_grad = True
         # self.fc = nn.Linear(config.hidden_size, config.num_classes)
         self.conv_region = nn.Conv2d(1, config.num_filters, (3, config.hidden_size), stride=1)
         self.conv = nn.Conv2d(config.num_filters, config.num_filters, (3, 1), stride=1)

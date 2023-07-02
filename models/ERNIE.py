@@ -2,7 +2,7 @@
 import torch
 import torch.nn as nn
 # from pytorch_pretrained_bert import BertModel, BertTokenizer
-from pytorch_pretrained import BertModel, BertTokenizer
+from transformers import ErnieModel, BertTokenizer
 
 class Config(object):
 
@@ -23,7 +23,8 @@ class Config(object):
         self.batch_size = 128                                           # mini-batch大小
         self.pad_size = 32                                              # 每句话处理成的长度(短填长切)
         self.learning_rate = 5e-5                                       # 学习率
-        self.bert_path = './ERNIE_pretrain'
+        # self.bert_path = './ERNIE_pretrain'
+        self.bert_path = 'nghuyong/ernie-3.0-base-zh'
         self.tokenizer = BertTokenizer.from_pretrained(self.bert_path)
         print(self.tokenizer)
         self.hidden_size = 768
@@ -33,7 +34,7 @@ class Model(nn.Module):
 
     def __init__(self, config):
         super(Model, self).__init__()
-        self.bert = BertModel.from_pretrained(config.bert_path)
+        self.bert = ErnieModel.from_pretrained(config.bert_path)
         for param in self.bert.parameters():
             param.requires_grad = True
         self.fc = nn.Linear(config.hidden_size, config.num_classes)
@@ -41,6 +42,6 @@ class Model(nn.Module):
     def forward(self, x):
         context = x[0]  # 输入的句子
         mask = x[2]  # 对padding部分进行mask，和句子一个size，padding部分用0表示，如：[1, 1, 1, 1, 0, 0]
-        _, pooled = self.bert(context, attention_mask=mask, output_all_encoded_layers=False)
-        out = self.fc(pooled)
+        out = self.bert(context, attention_mask=mask)
+        out = self.fc(out.last_hidden_state[:,0])
         return out

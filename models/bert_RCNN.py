@@ -2,7 +2,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from pytorch_pretrained import BertModel, BertTokenizer
+from transformers import BertModel, BertTokenizer
 
 
 class Config(object):
@@ -24,7 +24,8 @@ class Config(object):
         self.batch_size = 128                                           # mini-batch大小
         self.pad_size = 32                                              # 每句话处理成的长度(短填长切)
         self.learning_rate = 5e-5                                       # 学习率
-        self.bert_path = './bert_pretrain'
+        # self.bert_path = './bert_pretrain'
+        self.bert_path = 'bert-base-chinese'
         self.tokenizer = BertTokenizer.from_pretrained(self.bert_path)
         self.hidden_size = 768
         self.filter_sizes = (2, 3, 4)                                   # 卷积核尺寸
@@ -40,7 +41,7 @@ class Model(nn.Module):
         super(Model, self).__init__()
         self.bert = BertModel.from_pretrained(config.bert_path)
         for param in self.bert.parameters():
-            param.requires_grad = True
+            param.requires_grad = False
         self.lstm = nn.LSTM(config.hidden_size, config.rnn_hidden, config.num_layers,
                             bidirectional=True, batch_first=True, dropout=config.dropout)
         self.maxpool = nn.MaxPool1d(config.pad_size)
@@ -49,9 +50,9 @@ class Model(nn.Module):
     def forward(self, x):
         context = x[0]  # 输入的句子
         mask = x[2]  # 对padding部分进行mask，和句子一个size，padding部分用0表示，如：[1, 1, 1, 1, 0, 0]
-        encoder_out, text_cls = self.bert(context, attention_mask=mask, output_all_encoded_layers=False)
-        out, _ = self.lstm(encoder_out)
-        out = torch.cat((encoder_out, out), 2)
+        encoder_out = self.bert(context, attention_mask=mask).last_hidden_state #[batch_size, sequence_length, hidden_size]
+        out, _ = self.lstm(encoder_out) #[batch_size, sequence_length, hidden_size+num_directions * hidden_size]
+        out = torch.cat((encoder_out, out), 2)  ##[batch_size, sequence_length, num_directions * hidden_size]
         out = F.relu(out)
         out = out.permute(0, 2, 1)
         out = self.maxpool(out).squeeze()
